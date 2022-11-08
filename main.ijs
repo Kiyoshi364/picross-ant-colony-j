@@ -63,6 +63,40 @@ NB. parameter list:
 * ant
 )
 
+NB. Begin "Data Type": Picked
+NB. "Haskell type": Picked a = Keep a | New a
+
+    NB. "Constructors"
+    K =: 0 ; <@]
+    N =: 1 ; <@]
+
+    NB. Apply <u> if is New else do nothing
+    Ap =: 1 : '0&{:: ([ ; {) (; <@u)@{::~&1'
+
+    NB. "Destructor/Elimination"
+    P =: 2 : '0&{:: ([ {:: (u@] ; <@v@])@]) 1&{::'
+    unP =: 1&{::
+
+NB. End "Data Type": Picked
+
+NB. check/update termination condition and run 'it'
+NB. inputs: (params) loop (boxed list from init)
+loop =: 4 : 0
+evap=. 0&{::
+f2  =. @.1
+ant =. 2&{::
+
+t   =. 0&{::
+fer =. 1&{::
+fbp =. 2&{::
+bp  =. 3&{::
+
+iter =. (0 1 { x) it
+NB. runs an iteration, updates feromone, f(bpath), bpath
+new =. (2 3&{)@] (0&{@] , ({::~&0@[ > {::~&1@]) { [ ,: 1 2&{@]) 1&{::@] iter (2&{::@[)
+x new y
+)
+
 NB. This is a multi line comment
 0 : 0
 TODO:
