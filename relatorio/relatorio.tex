@@ -577,6 +577,59 @@ a quarta são as \emph{variáveis de loop}:
 
 \subsection{Método}
 
+Para cada puzzle e configuração de parâmetros,
+vão ser executados 5 vezes,
+assim terão duas tabelas,
+uma com todas as saídas e
+outra com as melhores.
+No final, vão aparecer 3 imagens:
+a solução, a diferênça e
+o melhor caminho encontrado em todas as execuções.
+A diferênça tem duas cores extras: vermelho e verde.
+Vermelho aponta um pixel colorido erroniamente,
+enquanto verde aponta um pixel que não foi pintado.
+
+Além dos 3 puzzles da figura \ref{pg:5x5},
+vai ter um puzzle gerado aleatóriamente
+para cada um dos seguintes tamanhos:
+\(10 \times 10\) (\ref{p:random10}),
+\(25 \times 25\) (\ref{p:random25}) e
+\(50 \times 50\) (\ref{p:random25}) .
+A ideia é ter uma noção de o quão bem
+ele se comporta com puzzles maiores.
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}{0.3\textwidth}
+        \centering
+        \includegraphics[width=0.9\linewidth]{random10-border}
+        \caption{Puzzle \(10 \times 10\)}
+        \label{p:random10}
+    \end{subfigure}
+    \begin{subfigure}{0.3\textwidth}
+        \centering
+        \includegraphics[width=0.9\linewidth]{random25-border}
+        \caption{Puzzle \(25 \times 25\)}
+        \label{p:random25}
+    \end{subfigure}
+    \begin{subfigure}{0.3\textwidth}
+        \centering
+        \includegraphics[width=0.9\linewidth]{random50-border}
+        \caption{Puzzle \(50 \times 50\)}
+        \label{p:random50}
+    \end{subfigure}
+    \caption{Puzzles maiores}
+    \label{pg:others}
+\end{figure}
+
+O melhor caminho de cada execução vai estar
+na pasta \file{images/puzzle/params/},
+onde \file{puzzle} é o nome do puzzle,
+e \file{params} são os parâmetros escolhidos
+para a execução.
+
+\subsection{Tabelas}
+
 \section{Possíveis Melhorias de Performance}
 \subsection{Representação do Grafo}
 
