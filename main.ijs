@@ -27,6 +27,11 @@ NB. pick the best thing acording to <eval>
 NB. input: ((eval) best) (list of boxed things)
 best =: 1 : '] >@{~ [: (] i. <./) u@>@]'
 
+NB. create a feromone table with <num>
+NB. inputs: (num) newfer (board) OR newfer (board)
+NB. default <num> is 1
+newfer =: 1&$: : ([ $~ 2 , $@])
+
 NB. update feromone
 NB. inputs: (best_path) ((evaporation) uf) (feromone)
 uf =: 1 : '(-.m)&*@] + (,:~ -.)@[ * m * +/@:(+/)@:(+/)@] % */@$@['
@@ -38,14 +43,27 @@ it =: 1 : '(f best)@rpaths ([ ;~ m uf) ['
 
 NB. initial state
 NB. input: (graph) ((timer) init (count)) (feromone)
-NB. output: boxed list: timer ; count ; graph ; feromone ; first bpath
+NB. output: boxed list:
+NB.     timer ; count ; graph ; feromone ; first bpath
 init =: 2 : 'm ; n ; [ ; ] ; 0 $~ }.@$@]'
+
+NB. initial state
+NB. input: (graph) ((timer) init (count)) (feromone)
+NB. output: boxed list:
+NB.     timer ; count ; graph ; feromone ; f(bpath) ; first bpath
+initf =: 2 : 'm ; n ; [ ; ] ; ] (f ; ]) 0 $~ }.@$@]'
+
+NB. function to minimize
+NB. input: (graph) f (board)
+f =: flist f.
+
+NB. first (dumb) function to minimize
+NB. input: (graph) flist (board)
+flist =: [: +/@, [ (|@-/)@(,:!.0)&> n2b@]
 
 NB. This is a multi line comment
 0 : 0
 TODO:
-NB. function to minimize
-f =: todo
 
 NB. **sketch**
 NB. fill in between with 0's
