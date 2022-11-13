@@ -15,16 +15,16 @@ NB. Show board
 sb =: '.X'&$: : ({~)
 
 NB. build random path
-NB. input: (ignored) rpath (feromone)
+NB. inputs: (ignored) rpath (feromone)
 rpath =: (0&{ > +/ * 0 ?@$~ 1&}.@$)@]
 
 NB. build <count> random paths
-NB. input: (feromone) rpaths (count)
+NB. inputs: (feromone) rpaths (count)
 NB. output is boxed list
 rpaths =: [ <@rpath~"_ 0 i.@]
 
 NB. pick the best thing acording to <eval>
-NB. input: ((eval) best) (list of boxed things)
+NB. inputs: (ignored) ((eval) best) (list of boxed things)
 best =: 1 : '] >@{~ [: (] i. <./) u@>@]'
 
 NB. create a feromone table with <num>
@@ -42,23 +42,23 @@ NB. output: boxed list: new feromone ; bpath
 it =: 1 : '(f best)@rpaths ([ ;~ m uf) ['
 
 NB. initial state
-NB. input: (graph) ((timer) init (count)) (feromone)
+NB. inputs: (graph) ((timer) init (count)) (feromone)
 NB. output: boxed list:
 NB.     timer ; count ; graph ; feromone ; first bpath
 init =: 2 : 'm ; n ; [ ; ] ; 0 $~ }.@$@]'
 
 NB. initial state
-NB. input: (graph) ((timer) init (count)) (feromone)
+NB. inputs: (graph) ((timer) init (count)) (feromone)
 NB. output: boxed list:
 NB.     timer ; count ; graph ; feromone ; f(bpath) ; first bpath
 initf =: 2 : 'm ; n ; [ ; ] ; ] (f ; ]) 0 $~ }.@$@]'
 
 NB. function to minimize
-NB. input: (graph) f (board)
+NB. inputs: (graph) f (board)
 f =: flist f.
 
 NB. first (dumb) function to minimize
-NB. input: (graph) flist (board)
+NB. inputs: (graph) flist (board)
 flist =: [: +/@, [ (|@-/)@(,:!.0)&> n2b@]
 
 NB. This is a multi line comment
@@ -67,7 +67,7 @@ TODO:
 
 NB. **sketch**
 NB. fill in between with 0's
-NB. input: () a ()
+NB. inputs: () a ()
 a =: todo
 
 NB. stop conditions
