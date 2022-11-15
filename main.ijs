@@ -38,9 +38,9 @@ NB. inputs: (best_path) ((evaporation) uf) (feromone)
 uf =: 1 : '(-.m)&*@] + (,:~ -.)@[ * m * +/@:(+/)@:(+/)@] % */@$@['
 
 NB. one iteration with <ant> ants
-NB. inputs: (feromone) ((evaporation) it (f)) (ant)
+NB. inputs: (feromone) ((evaporation ; f) it) (ant)
 NB. output: boxed list: new feromone ; f(bpath) ; bpath
-it =: 1 : '(f best)@rpaths ([ ;~ m uf) ['
+it =: 1 : '(m@.1 best)@rpaths ([ ;~ 1&{::@[ ((0 {:: m) uf) ]) ['
 
 NB. first (dumb) function to minimize
 NB. inputs: (graph) flist (board)
@@ -56,10 +56,6 @@ NB. output: boxed list:
 NB.     timer ; ant ; graph ; feromone ; f(bpath) ; first bpath
 init =: 2 : 'm ; n ; ] ; [ ; [ (f ; ]) 0 $~ }.@$@['
 
-
-NB. first (dumb) function to minimize
-NB. inputs: (graph) flist (board)
-flist =: [: +/@, [ (|@-/)@(,:!.0)&> n2b@]
 
 NB. This is a multi line comment
 0 : 0
