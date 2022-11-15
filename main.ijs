@@ -48,14 +48,20 @@ flist =: [: +/@, [ (|@-/)@(,:!.0)&> n2b@]
 
 NB. function to minimize
 NB. inputs: (graph) f (board)
-f =: flist f.
+f =: flist
 
 NB. initial state
-NB. inputs: (feromone) ((timer) init (ant)) (graph)
+NB. inputs: (timer) ((params) init) (feromone)
 NB. output: boxed list:
-NB.     timer ; ant ; graph ; feromone ; f(bpath) ; first bpath
-init =: 2 : 'm ; n ; ] ; [ ; [ (f ; ]) 0 $~ }.@$@['
+NB.     timer ; feromone ; f(bpath) ; first bpath
+init =: 1 : '[ ; ] ; [: (m@.1 ; ]) 0 $~ }.@$@]'
 
+0 : 0
+NB. parameter list:
+* evaporation
+* f
+* ant
+)
 
 NB. This is a multi line comment
 0 : 0
