@@ -25,7 +25,8 @@ rpaths =: [ <@rpath~"_ 0 i.@]
 
 NB. pick the best thing acording to <eval>
 NB. inputs: (ignored) ((eval) best) (list of boxed things)
-best =: 1 : '] >@{~ [: (] i. <./) u@>@]'
+NB. output: boxed list: f(bthing) ; bthing
+best =: 1 : '] (] ;~ [ {::~ i.~@]) [: <./ u@>@]'
 
 NB. create a feromone table with <num>
 NB. inputs: (num) newfer (board) OR newfer (board)
@@ -41,21 +42,20 @@ NB. inputs: (feromone) ((evaporation) it) (count)
 NB. output: boxed list: new feromone ; bpath
 it =: 1 : '(f best)@rpaths ([ ;~ m uf) ['
 
-NB. initial state
-NB. inputs: (graph) ((timer) init (count)) (feromone)
-NB. output: boxed list:
-NB.     timer ; count ; graph ; feromone ; first bpath
-init =: 2 : 'm ; n ; [ ; ] ; 0 $~ }.@$@]'
-
-NB. initial state
-NB. inputs: (graph) ((timer) init (count)) (feromone)
-NB. output: boxed list:
-NB.     timer ; count ; graph ; feromone ; f(bpath) ; first bpath
-initf =: 2 : 'm ; n ; [ ; ] ; ] (f ; ]) 0 $~ }.@$@]'
+NB. first (dumb) function to minimize
+NB. inputs: (graph) flist (board)
+flist =: [: +/@, [ (|@-/)@(,:!.0)&> n2b@]
 
 NB. function to minimize
 NB. inputs: (graph) f (board)
 f =: flist f.
+
+NB. initial state
+NB. inputs: (feromone) ((timer) init (count)) (graph)
+NB. output: boxed list:
+NB.     timer ; count ; graph ; feromone ; f(bpath) ; first bpath
+init =: 2 : 'm ; n ; ] ; [ ; [ (f ; ]) 0 $~ }.@$@['
+
 
 NB. first (dumb) function to minimize
 NB. inputs: (graph) flist (board)
