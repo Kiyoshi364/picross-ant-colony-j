@@ -96,7 +96,9 @@ NB. runs an iteration, updates feromone, f(bpath), bpath
 new =. {.@] , (2 3&{)@] (0&{@] , ({::~&0@[ > {::~&1@]) { [ ,: 1 2&{@]) 1&{::@] iter (2&{::@[)
 NB. decrement timer
 dec =. ] (}.@[ ;~ 0 >. <:@]) {::~&0@]
-x&(dec@:new) Ap y
+NB. checks if should terminate (timer == 0)
+finish =. (<@] ;~ 0 < 0&{::)@unP@]
+finish x&(dec@:new) Ap y
 )
 
 NB. This is a multi line comment
