@@ -93,8 +93,10 @@ bp  =. 3&{::
 
 iter =. (0 1 { x) it
 NB. runs an iteration, updates feromone, f(bpath), bpath
-new =. (2 3&{)@] (0&{@] , ({::~&0@[ > {::~&1@]) { [ ,: 1 2&{@]) 1&{::@] iter (2&{::@[)
-x new y
+new =. {.@] , (2 3&{)@] (0&{@] , ({::~&0@[ > {::~&1@]) { [ ,: 1 2&{@]) 1&{::@] iter (2&{::@[)
+NB. decrement timer
+dec =. ] (}.@[ ;~ 0 >. <:@]) {::~&0@]
+x&(dec@:new) Ap y
 )
 
 NB. This is a multi line comment
