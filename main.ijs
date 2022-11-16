@@ -23,8 +23,8 @@ NB. inputs: (feromone) rpaths (ant)
 NB. output is boxed list
 rpaths =: [ <@rpath~"_ 0 i.@]
 
-NB. pick the best thing acording to <eval>
-NB. inputs: (ignored) ((eval) best) (list of boxed things)
+NB. pick the best thing acording to <f>
+NB. inputs: (ignored) ((f) best) (list of boxed things)
 NB. output: boxed list: f(bthing) ; bthing
 best =: 1 : '] (] ; [ {::~ i.~@]) [: <./ u@>@]'
 
@@ -38,9 +38,9 @@ NB. inputs: (best_path) ((evaporation) uf) (feromone)
 uf =: 1 : '(-.m)&*@] + (,:~ -.)@[ * m * +/@:(+/)@:(+/)@] % */@$@['
 
 NB. one iteration with <ant> ants
-NB. inputs: (feromone) ((evaporation ; f) it) (ant)
+NB. inputs: (ignored) ((evaporation ; f ; ant) it) (feromone)
 NB. output: boxed list: new feromone ; f(bpath) ; bpath
-it =: 1 : '(m@.1 best)@rpaths ([ ;~ 1&{::@[ ((0 {:: m) uf) ]) ['
+it =: 1 : '((m@.1 best)@rpaths&(2 {:: m) ([ ;~ 1&{::@[ ((0 {:: m) uf) ]) ])@]'
 
 NB. first (dumb) function to minimize
 NB. inputs: (graph) flist (board)
@@ -81,7 +81,7 @@ NB. End "Data Type": Picked
 
 NB. check/update termination condition and run 'it'
 NB. inputs: (params) loop (boxed list from init)
-loop =: 4 : 0
+loop =: 1 : 0
 evap=. 0&{::
 f2  =. @.1
 ant =. 2&{::
@@ -91,14 +91,13 @@ fer =. 1&{::
 fbp =. 2&{::
 bp  =. 3&{::
 
-iter =. (0 1 { x) it
 NB. runs an iteration, updates feromone, f(bpath), bpath
-new =. {.@] , (2 3&{)@] (0&{@] , ({::~&0@[ > {::~&1@]) { [ ,: 1 2&{@]) 1&{::@] iter (2&{::@[)
+new =. {. , (2 3&{) (0&{@] , ({::~&0@[ > {::~&1@]) { [ ,: 1 2&{@]) (m it)@{::~&1
 NB. decrement timer
 dec =. ] (}.@[ ;~ 0 >. <:@]) {::~&0@]
 NB. checks if should terminate (timer == 0)
 finish =. (<@] ;~ 0 < 0&{::)@unP@]
-finish x&(dec@:new) Ap y
+finish (dec@:new) Ap y
 )
 
 NB. This is a multi line comment
