@@ -82,15 +82,6 @@ NB. End "Data Type": Picked
 NB. check/update termination condition and run 'it'
 NB. inputs: (params) loop (boxed list from init)
 loop =: 1 : 0
-evap=. 0&{::
-f2  =. @.1
-ant =. 2&{::
-
-t   =. 0&{::
-fer =. 1&{::
-fbp =. 2&{::
-bp  =. 3&{::
-
 NB. runs an iteration, updates feromone, f(bpath), bpath
 new =. {. , (2 3&{) (0&{@] , ({::~&0@[ > {::~&1@]) { [ ,: 1 2&{@]) (m it)@{::~&1
 NB. decrement timer
