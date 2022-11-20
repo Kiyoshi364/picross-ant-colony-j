@@ -157,14 +157,75 @@ de um puzzle arbitrário de picross são \emph{NP-completo}.
 \end{itemize}
 
 \section{Modelagem}
-\subsection{Método/Heurística Escolhida}
-\subsection{Funcionamento do Algoritmo}
+
+O algoritmo escolhido foi o \emph{Ant Colony}.
+O principal motivo para ele ter sido escolhido
+foi ``formigas são legais!'',
+na verdade, ele foi escolhido antes do problema em si.
+O problema é muito bom para essa heurística,
+pois é o problema é facilmente traduzido
+em escolher um caminho sobre um grafo e
+grafo é gerado bem simples.
+\emph{Ant Colony} funciona com um simples loop,
+no qual a cada iteração são executados os passos:
+\begin{enumerate}
+    \item Construir caminhos \par
+        Nesse passo, são construídos \(ants\) caminhos e
+        o melhor deles, de acordo com a \emph{função objetivo},
+        é guardado.
+        Cada caminho, deve ser escolhido aleatóriamente
+        em função da \emph{distribuição do feromônio} e
+        da \emph{heurística}.
+        Geralmente são usados os parâmetros \(\alpha\) e \(\beta\)
+        para equilibrar esses valores
+        que formam os pesos dos caminhos.
+    \item Atualizar o feromônio \par
+        O melhor caminho da iteração \(p\) é usado
+        para atualizar
+        o feromônio \(\tau_e\) em cada aresta \(e\) do grafo
+        usando a seguinte fórmula:
+        \[
+            \tau_e \leftarrow
+                (1 - \rho) \; \tau_e
+                + in(p, e) \; \frac{\rho \; \tau}{len(p)}
+        \]
+        onde \(\rho\) é a taxa de evaporação do feromônio
+        (um parâmetro),
+        \(\tau\) é a soma de feromônio em todas as atestas
+        (uma constante),
+        \(in(p, e)\) é uma função que retorna \(1\) se
+        \(p\) passa pela aresta \(e\) e \(0\) caso contrário e
+        \(len(p)\) são por quantas arestas \(p\) passa.
+    \item Checar a condição de parada \par
+        Existem duas condições mais comuns:
+        checar se ``acabou o gás'',
+        podendo ser o número de iterações ou tempo de execução;
+        checar se achamos uma solução.
+        Nem sempre é possível ou fácil usar a segunda,
+        mas nesse caso é possível e relativamente fácil.
+        Quando for decidido que se deve parar,
+        retorna-se o melhor caminho encontrado até agora
+        (não necessariamente dessa iteração).
+\end{enumerate}
+
 \subsection{Função Objetivo}
-\subsection{Espaço de Busca}
+A \emph{função objetivo} deve impor
+uma ordenação sobre os caminhos,
+de forma que quanto mais próxima da solução
+``melhor'' ela é.
+
+\subsection{Heurística}
+A \emph{heurística} é uma forma de aumentar a chance de escolher
+um caminho mais provável de ser melhor.
+Também deixa pouco provável
+caminhos que aparentam ser ruins.
+Idealmente ela vai apontar para caminhos que
+minimizam/maximizam a \emph{função objetivo}.
 
 \section{Implementação}
 \subsection{Representação do Grafo}
-\subsection{Construção dos Caminhos}
+\subsection{Função Objetivo}
+\subsection{Construção de Caminhos}
 \subsection{Atualização do Feromônio}
 \subsection{Condição de Parada}
 
