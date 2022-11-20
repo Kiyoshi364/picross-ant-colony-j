@@ -180,22 +180,22 @@ no qual a cada iteração são executados os passos:
         para equilibrar esses valores
         que formam os pesos dos caminhos.
     \item Atualizar o feromônio \par
-        O melhor caminho da iteração \(p\) é usado
+        O melhor caminho da iteração \(c\) é usado
         para atualizar
         o feromônio \(\tau_e\) em cada aresta \(e\) do grafo
         usando a seguinte fórmula:
         \[
             \tau_e \leftarrow
                 (1 - \rho) \; \tau_e
-                + in(p, e) \; \frac{\rho \; \tau}{len(p)}
+                + in(c, e) \; \frac{\rho \; \tau}{len(c)}
         \]
         onde \(\rho\) é a taxa de evaporação do feromônio
         (um parâmetro),
         \(\tau\) é a soma de feromônio em todas as atestas
         (uma constante),
-        \(in(p, e)\) é uma função que retorna \(1\) se
-        \(p\) passa pela aresta \(e\) e \(0\) caso contrário e
-        \(len(p)\) são por quantas arestas \(p\) passa.
+        \(in(c, e)\) é uma função que retorna \(1\) se
+        \(c\) passa pela aresta \(e\) e \(0\) caso contrário e
+        \(len(c)\) são por quantas arestas \(c\) passa.
     \item Checar a condição de parada \par
         Existem duas condições mais comuns:
         checar se ``acabou o gás'',
