@@ -61,7 +61,7 @@ e assim o tamanho da lista
 indica a quantidade de blocos dessa linha/coluna.
 
 A figura \ref{pg:5x5} mostra dois exemplos
-de puzzles já resolvidos,
+de puzzles \(n \times n\) já resolvidos,
 mas note que as dicas não estão incluídas e
 a borda cinza não faz parte do puzzle.
 As dicas são representadas por uma matriz
@@ -79,6 +79,8 @@ indica a ordem e tamanho dos blocos
 da coluna \(i\)
 (contando da esquerda para direita).
 Em ambos os casos \(0 \le i < n\).
+Caso não tenha nenhum bloco na linha/coluna,
+aparece um \(0\) no lugar de uma lista vazia.
 
 A seguir, estão as dicas dos puzzles
 \ref{p:face}, \ref{p:heart} e \ref{p:random5};
@@ -223,17 +225,208 @@ Idealmente ela vai apontar para caminhos que
 minimizam/maximizam a \emph{função objetivo}.
 
 \section{Implementação}
-\subsection{Representação do Grafo}
+
+A linguagem escolhida para a implementação foi \lang{}:
+uma linguagem orientada a arrays,
+da mesma família que  \texttt{APL}.
+Não foi usada nenhuma biblioteca para construir o algoritmo,
+mas foi usada \inlcode{viewmat} para fazer as imagens
+apresentadas nesse relatório.
+
+\subsection{Representação do Grafo e das Dicas}
+Para um puzzle \(n \times m\),
+construímos um grafo com \(1 + n \cdot m\) vértices
+numerados de \(-1 \le v < n \cdot m\) e
+\(2 \cdot n \cdot m\) arestas nomeadas \((p, b)\),
+com \(0 \le p < n \cdot m\) e \(b \in \{0, 1\}\).
+
+\(-1\) é o vértice inicial do caminho,
+só está alí por formalidades;
+os outros \(0 \le v < n \cdot m\)
+representam um pixel de coordenadas \((x(v), y(v))\) do puzzle.
+A princípio, \(x\) e \(y\) podem ser quaisquer
+funções que, em conjunto,
+não repetem nem deixam sobrar nenhum pixel.
+Por simplicidade, vamos usar
+\(x(v) := \!\!\!\mod\!\!(v, m)\) e
+\(y(v) := \left\lfloor\frac{v}{m}\right\rfloor\),
+mas, pela natureza da linguagem escolhida,
+isso vai ``aparecer'' como a ausência de uma função
+que reordena uma possível solução no código.
+
+A aresta \((p, b)\) sai do vértice \(p-1\) e
+chega no vértice \(p\),
+\(b\) indica a cor do pixel \(p\):
+se \(b = 0\) é vazio/branco,
+é preto caso contrário.
+Na prática podemos ``jogar os vértices fora''
+e só prestar atenção nas arestas,
+isso torna grafo é tão simples
+a ponto de não aparecer explicitamente na implementação.
+
+A representação das dicas já foi descrita na primeira seção,
+mas não foi dito que ela só funciona para puzzles quadrados
+(todas as linhas de uma matriz devem ter o mesmo tamanho).
+Não é difícil criar uma outra representação que suporte
+puzzles retangulares, basta encaixotar cada lista,
+mas não tinha pensado em suportar puzzles retangulares durante
+a implementação.
+A dica do puzzle \ref{p:face} ficaria assim:
+\begin{minted}{j}
+   (1 ; 1 1 ; 1 ; 1 1 ; 1) ; < 0 ; 1 1 ; 0 ; 1 1 ; 3
++---------------+---------------+
+|+-+---+-+---+-+|+-+---+-+---+-+|
+||1|1 1|1|1 1|1|||0|1 1|0|1 1|3||
+|+-+---+-+---+-+|+-+---+-+---+-+|
++---------------+---------------+
+\end{minted}
+
+\subsection{Representação de um Caminho}
+O caminho é representado por uma matriz de mesma forma
+do puzzle \(n \times m\) com os valores em \(\{ 0, 1 \}\).
+O elemento na posição \((i, j)\) da matriz que guarda o valor \(b\)
+representa a aresta \((xy^{-1}(i, j), b)\),
+onde \(xy^{-1}\) é a ``função inversa'' das funções \(x\) e \(y\),
+ou seja, \(xy^{-1}(i, j) = v\) quando \(x(v) = i\) e \(y(v) = j\).
+No nosso caso, \(xy^{-1}(i, j) := i \cdot m + j\).
+
+Essa representação é muito interessante, pois
+``a menos de uma função de reorganização''
+(no nosso caso, a ``reorganização vazia'')
+o caminho é uma possível representação direta da solução.
+Veja a representação da solução do puzzle \ref{p:heart}:
+\begin{minted}{j}
+    NB. Isso é só para guardar numa variável e mostrar o resultado
+    ] b =: 0 1 0 1 0 , 1 1 1 1 1 , 1 1 1 1 1 , 0 1 1 1 0 ,: 0 0 1 0 0
+0 1 0 1 0
+1 1 1 1 1
+1 1 1 1 1
+0 1 1 1 0
+0 0 1 0 0
+    NB. 'X' é preto e '.' é branco
+    b { '.X'
+.X.X.
+XXXXX
+XXXXX
+.XXX.
+..X..
+\end{minted}
+
 \subsection{Função Objetivo}
+A \emph{função objetivo} escolhida transforma
+o caminho em uma matriz de lista de tamanho dos blocos,
+de forma que,
+se essa fosse a solução retornaria uma matriz idêntica a dica.
+Então, as listas são pareadas e elemento a elemento
+(possívelmente estendendo a lista menor com \(0\)s)
+são feitas subtrações seguidas de absoluto (para remover negativos).
+Somamos todos os números de todas as listas.
+A função que faz isso é \inlcode{flist}.
+
+Um exemplo comparando as segundas linhas dos
+puzzles \ref{p:heart} e \ref{p:random5}:
+\begin{minted}{j}
+    5 ; 1 1         NB. em representação de blocos
++-+---+
+|5|1 1|
++-+---+
+    5 0 ,:!.0 1 1   NB. estendendo a menor com 0s
+5 0
+1 1
+    | 5 0 - 1 1     NB. subtraindo, seguido de absoluto
+4 1
+    +/ 4 1          NB. somando (falta as outras linhas e colunas)
+5
+\end{minted}
+
+Com essa escolha de função,
+procuramos minimizar a sua imagem.
+Uma propriedade interessante dela é
+que apenas uma solução vai ter o valor de \(0\),
+permitindo parar mais cedo.
+
+\subsection{Representação do Feromônio}
+A lista de feromônios é representada por uma
+matriz \(2 \times n \times m\),
+no qual o elemento \((b, i, j)\) armazena a
+quantidade de feromônio da aresta \((xy^{-1}(i, j), b)\),
+usando o \(xy^{-1}\) descrito anteriormente.
+
+Colocar o \(b\) na primeira dimensão
+é vantajoso pela semântica da linguagem.
+Essa representação permite pegar
+uma matriz que representa um caminho \(c\)
+e ``colar em cima'' sua matriz com elementos complementares
+(\(x \longmapsto 1 - x\)),
+montando as respostas da função \(in(c, e)\)
+(uma ``máscara'')
+necessárias para atualizar o feromônio.
+Também facilita na geração de caminhos,
+explicada mais a frente.
+
 \subsection{Construção de Caminhos}
-\subsection{Atualização do Feromônio}
+Não foi escolhida nenhuma heurística
+para a construção dos caminhos,
+o principal motivo é simplificar a implementação
+dado que estou fazendo o trabalho sozinho e
+não ter pensado em uma heurística fácil de implementar.
+
+Dessa forma, não precisamos
+dos parâmetros \(\alpha\) e \(\beta\),
+e a escolha do caminho,
+pelo método da roleta,
+é influenciada apenas pelo feromônio.
+Isso, junto a escolha do grafo,
+faz com que a escolha da cor de um pixel
+seja completamente independente
+da escolha da cor de qualquer outro pixel.
+O esperado é que seja necessário mais iterações
+para que se ache um caminho bom.
+
 \subsection{Condição de Parada}
+A condição de parada é a combinação
+de um contador de iterações
+com uma verificação da imagem da \emph{função objetivo},
+se algum deles for \(0\) podemos parar.
+
+\lang{} possui uma função de ``exponenciação de funções'',
+que aplica a função a quantidade de vezes que o ``expoente'' indica,
+de forma que para um \(n\) inteiro:
+\[
+    f^n(x) := \begin{cases}
+        f^{n+1}(f^{-1}(x))  &\quad,\; n < 0 \\
+        x                   &\quad,\; n = 0 \\
+        f^{n-1}(f(x))       &\quad,\; n > 0
+    \end{cases}
+\]
+Não precisa se preocupar com o inverso da função.
+O interessante é que está definida para \(n = \infty\),
+aplica-se \(f\) até o resultado não se alterar,
+efetivamente calculando um \emph{ponto fixo} da função.
+Na implementação, o loop principal retorna
+a mesma entrada caso uma das condições indique para parar,
+permitindo usar essa ideia de \emph{ponto fixo}.
+
+O número máximo de iterações poderia ser \(n\) (o expoente),
+no lugar de \(\infty\),
+mas deixá-lo como um parâmetro
+permite uma \inlcode{main} mais simples.
 
 \section{Resultados}
 
-\section{Possíveis Melhorias}
+\section{Possíveis Melhorias de Performance}
+\subsection{Representação do Grafo}
+
 \subsection{Função Objetivo}
-\subsection{Espaço de Busca}
+\subsubsection{Quadrado em vez de Absoluto}
+\subsubsection{Função mais inteligente}
+
+\subsection{Geração de Caminhos}
+
+\section{Possíveis Melhorias de Funcionalidade}
+\subsection{Permitir para diferentes linhas e colunas}
+\subsection{Generalizar para mais cores}
+\subsection{Permitir solução parcial}
 
 \section{Análise final}
 
