@@ -36,6 +36,7 @@ newfer =: 1&$: : ([ $~ 2 , $@])
 NB. update feromone
 NB. inputs: (best_path) ((evaporation) uf) (feromone)
 uf =: 1 : '(-.m)&*@] + (,:~ -.)@[ * m * +/@:(+/)@:(+/)@] % */@$@['
+NB. '+/@:(+/)@:(+/)@]' could be '+/@,@]'
 
 NB. one iteration with <ant> ants
 NB. inputs: (ignored) ((evaporation ; f ; ant) it) (feromone)
