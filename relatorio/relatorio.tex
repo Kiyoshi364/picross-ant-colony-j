@@ -6,12 +6,28 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 
+%\usepackage{fontspec}
+%\setmainfont{Noto Serif}
+
 \usepackage{amsmath}
 \usepackage{amssymb}
 
 \usepackage{minted}
 
 \usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    breaklinks=true,
+    linkcolor=purple,
+    filecolor=cyan,
+    urlcolor=blue,
+    pdftitle={Picross e Ant Colony},
+}
+\urlstyle{same}
+
+\usepackage{subcaption}
+\usepackage{graphicx}
+\graphicspath{{../images/}}
 
 \newcommand{\lang}{\texttt{J}}
 \newcommand{\inlcode}{\mintinline[breaklines]{J}}
@@ -35,17 +51,109 @@ o puzzle tem como objetivo colorir
 uma grid \(n \times m\) com quadrados,
 seguindo \(n + m\) dicas
 (exatamente uma para cada linha e coluna).
+Por simplificação, só vamos considerar
+puzzles de tamanho \(n \times n\).
+
 Cada dica é uma lista de números
 que indicam o tamanho dos blocos e
 sua ordem da sua respectiva linha ou coluna,
 e assim o tamanho da lista
 indica a quantidade de blocos dessa linha/coluna.
 
+A figura \ref{pg:5x5} mostra dois exemplos
+de puzzles já resolvidos,
+mas note que as dicas não estão incluídas e
+a borda cinza não faz parte do puzzle.
+As dicas são representadas por uma matriz
+\(2 \times n\) de lista de números
+(eles estão ``encaixotados''),
+de forma que a lista \((0,i)\)
+indica a ordem e tamanho dos blocos
+(esquerda para direita)
+da linha \(i\)
+(contando de cima para baixo).
+E, de forma similar,
+a lista \((1,i)\)
+indica a ordem e tamanho dos blocos
+(cima para baixo)
+da coluna \(i\)
+(contando da esquerda para direita).
+Em ambos os casos \(0 \le i < n\).
+
+A seguir, estão as dicas dos puzzles
+\ref{p:face}, \ref{p:heart} e \ref{p:random5};
+a linha que está identada é o código em \lang{}
+e abaixo o resultado:
+\begin{minted}{j}
+    NB. $ é usado para alterar as dimensões do array
+    2 5 $ 1 ; 1 1 ; 1 ; 1 1 ; 1 ; 0 ; 1 1 ; 0 ; 1 1 ; 3
++-+---+-+---+-+
+|1|1 1|1|1 1|1|
++-+---+-+---+-+
+|0|1 1|0|1 1|3|
++-+---+-+---+-+
+   2 5 $ 1 1 ; 5 ; 5 ; 3 ; 1 ; 2 ; 4 ; 4 ; 4 ; 2
++---+-+-+-+-+
+|1 1|5|5|3|1|
++---+-+-+-+-+
+|2  |4|4|4|2|
++---+-+-+-+-+
+   2 5 $ 2 2 ; 1 1 ; 1 1 ; 1 1 ; 1 ; 2 1 ; 1 2 ; 1 ; 1 2 ; 1
++---+---+---+---+-+
+|2 2|1 1|1 1|1 1|1|
++---+---+---+---+-+
+|2 1|1 2|1  |1 2|1|
++---+---+---+---+-+
+\end{minted}
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}{0.3\textwidth}
+        \centering
+        \includegraphics[width=0.9\linewidth]{face-border}
+        \caption{Carinha Feliz de ASCII}
+        \label{p:face}
+    \end{subfigure}
+    \begin{subfigure}{0.3\textwidth}
+        \centering
+        \includegraphics[width=0.9\linewidth]{heart-border}
+        \caption{Coração}
+        \label{p:heart}
+    \end{subfigure}
+    \begin{subfigure}{0.3\textwidth}
+        \centering
+        \includegraphics[width=0.9\linewidth]{random5-border}
+        \caption{Aleatório}
+        \label{p:random5}
+    \end{subfigure}
+    \caption{Exemplos de picross 5x5}
+    \label{pg:5x5}
+\end{figure}
+
+Ambos os problemas de existência e unicidade de uma solução
+(saber se existe uma solução e se ela é única)
+de um puzzle arbitrário de picross são \emph{NP-completo}.
+
 \subsection{Formas conhecidas de resolução}
 \begin{itemize}
     \item Depth First Search (Brute Force): \par
+        Tenta pintar um pixel,
+        se nenhuma dica quebrar tente de novo.
+        Se alguma dica quebrar, troque a cor e continue.
+        Se der errado com a nova cor, ``volte'' e tente de novo.
     \item Heuristic/Iterational: \par
+        A ideia é aplicar uma sequência de regras simples
+        para determinar a cor de algum pixel
+        várias e várias vezes.
+        A técnica é semelhante a um humano resolvendo o puzzle.
+        Alguns puzzles mais complexos
+        não podem ser resolvidos dessa forma,
+        é comum usar um DFS quando
+        uma iteração não encontra nenhum pixel novo.
     \item Integer Linear Programming: \par
+        O puzzle é modelado como
+        uma sequência de restrições lineares
+        com uma função \emph{dummy} de otimização.
 \end{itemize}
 
 \section{Modelagem}
@@ -70,7 +178,7 @@ indica a quantidade de blocos dessa linha/coluna.
 
 \section{Bibliografia}
 
-Sobre \lang:
+Sobre \lang{}:
 \begin{itemize}
     \item Página inicial: \par
         \url{https://wiki.jsoftware.com/wiki/Main_Page}
