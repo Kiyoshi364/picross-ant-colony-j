@@ -1,0 +1,98 @@
+\documentclass{article}
+
+\usepackage[width=14cm, left=3cm, top=2cm]{geometry}
+
+\usepackage[brazil]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\usepackage{minted}
+
+\usepackage{hyperref}
+
+\newcommand{\lang}{\texttt{J}}
+\newcommand{\inlcode}{\mintinline[breaklines]{J}}
+
+\title{Trabalho Computacional - Programação Não Linear\\
+Picross e Ant Colony}
+\author{Daniel Kiyoshi Hashimoto Vouzella de Andrade - 119025937}
+\date{Novembro 2022}
+
+\begin{document}
+\maketitle
+
+\section{Problema: Picross}
+
+O problema escolhido foi a resolução de
+um puzzle de \emph{picross}.
+Também conhecido por vários outros nomes
+(nonogram, griddler, hanjie, pic-a-pix,
+paint by numbers, \dots),
+o puzzle tem como objetivo colorir
+uma grid \(n \times m\) com quadrados,
+seguindo \(n + m\) dicas
+(exatamente uma para cada linha e coluna).
+Cada dica é uma lista de números
+que indicam o tamanho dos blocos e
+sua ordem da sua respectiva linha ou coluna,
+e assim o tamanho da lista
+indica a quantidade de blocos dessa linha/coluna.
+
+\subsection{Formas conhecidas de resolução}
+\begin{itemize}
+    \item Depth First Search (Brute Force): \par
+    \item Heuristic/Iterational: \par
+    \item Integer Linear Programming: \par
+\end{itemize}
+
+\section{Modelagem}
+\subsection{Método/Heurística Escolhida}
+\subsection{Funcionamento do Algoritmo}
+\subsection{Função Objetivo}
+\subsection{Espaço de Busca}
+
+\section{Implementação}
+\subsection{Representação do Grafo}
+\subsection{Construção dos Caminhos}
+\subsection{Atualização do Feromônio}
+\subsection{Condição de Parada}
+
+\section{Resultados}
+
+\section{Possíveis Melhorias}
+\subsection{Função Objetivo}
+\subsection{Espaço de Busca}
+
+\section{Análise final}
+
+\section{Bibliografia}
+
+Sobre \lang:
+\begin{itemize}
+    \item Página inicial: \par
+        \url{https://wiki.jsoftware.com/wiki/Main_Page}
+    \item Dicionário de primitivas: \par
+        \url{https://wiki.jsoftware.com/wiki/NuVoc}
+\end{itemize}
+
+Sobre \emph{Picross}:
+\begin{itemize}
+    \item History of Picross (Nonograms): \par
+        \url{https://youtu.be/qJCPxyi5x5g}
+    \item Solving Colored Nonograms: \par
+        \url{https://run.unl.pt/bitstream/10362/2388/1/Mingote_2009.pdf}
+    \item NP Completeness of Nonograms: \par
+        \url{https://kelbybsandvick.github.io/pdf/NPProblemPaper.pdf}
+    \item Complexity and solvability of Nonogram puzzles: \par
+        \url{https://fse.studenttheses.ub.rug.nl/15287/1/Master_Educatie_2017_RAOosterman.pdf}
+    \item kamilkhanlab/nonogram-ilp
+        (Implementação de solver em GAMS): \par
+        \url{https://github.com/kamilkhanlab/nonogram-ilp}
+    \item Nonogram Wikipédia: \par
+        \url{https://en.wikipedia.org/wiki/Nonogram}
+\end{itemize}
+
+\end{document}
