@@ -37,10 +37,6 @@ NB. Begin: Board Examples
     random5 =: 5 5 $ 1 1 0 1 1 , 1 0 1 0 0 , 0 1 0 1 0 , 0 1 0 1 0 , 1 0 0 0 0
 NB. End: Board Examples
 
-NB. Read and Write random seed
-rrand =: 9!:0
-wrand =: 9!:1
-
 NB. Make a (y y) random board
 b =: 2 ?@:$~ ,~
 
@@ -93,8 +89,10 @@ NB. output: boxed list:
 NB.     timer ; feromone ; f(bpath) ; first bpath
 init =: 1 : '[ ; ] ; [: (m@.1 ; ]) 0 $~ }.@$@]'
 
+NB. This is a multi line comment
+NB. that ends on a )
 0 : 0
-NB. parameter list:
+NB. parameter list (params):
 * evaporation
 * f
 * ant
@@ -129,17 +127,23 @@ loop =: 1 : 0
     finish (dec@:new) Ap y
 )
 
-NB. This is a multi line comment
-0 : 0
-TODO:
+NB. Read and Write random seed
+rrand =: 9!:0
+wrand =: 9!:1
 
-NB. **sketch**
-NB. fill in between with 0's
-NB. inputs: () a ()
-a =: todo
+NB. Read and Write random state
+rrands =: 9!:44
+wrands =: 9!:45
 
-NB. stop conditions
+NB. Time a function random seed
+timeit =: 6!:2
 
 NB. main loop
-main =: todo
+NB. inputs: (params) main (boxed list from init)
+main =: 4 : 0
+    rseed =. rrand''
+    rstate =. rrands''
+    run =. 4 : 'ret_main_ =: x loop y'
+    t =. timeit 'x run^:_ N y'
+    (rseed ; <rstate) ; t ; ret_main_
 )
