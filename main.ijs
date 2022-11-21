@@ -61,7 +61,12 @@ rpaths =: [ <@rpath~"_ 0 i.@]
 NB. pick the best thing acording to <f>
 NB. inputs: (ignored) ((f) best) (list of boxed things)
 NB. output: boxed list: f(bthing) ; bthing
-best =: 1 : '] (] ; [ {::~ i.~@]) [: <./ u@>@]'
+best =: 1 : 0
+    imgs =. u@> y
+    bimg =. <./ imgs
+    idx =. imgs i. bimg
+    bimg ; idx { y
+)
 
 NB. create a feromone table with <num>
 NB. inputs: (num) newfer (board) OR newfer (board)
