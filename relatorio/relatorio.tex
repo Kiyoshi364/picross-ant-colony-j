@@ -696,20 +696,66 @@ então não tenho certeza se todas estão certas.
 \end{figure}
 
 \section{Possíveis Melhorias de Performance}
+
+As sugestões de melhorias são para melhorar
+a qualidade do algoritmo,
+não necessariamente o tempo de execução.
+
 \subsection{Representação do Grafo}
+Atualmente a distribuição de feromônio no Grafo
+não guarda de nenhuma forma ``da onde'' a formiga veio.
+Talvez uma representação que ``se lembre melhor'' ajude.
 
 \subsection{Função Objetivo}
 \subsubsection{Quadrado em vez de Absoluto}
+A \emph{função objetivo} atual usa absoluto,
+talvez elevar ao quadrado dê mais valor
+a candidatos mais próximos a resposta.
+
 \subsubsection{Função mais inteligente}
+A \emph{função objetivo} atual converte o caminho em uma dica,
+uma representação que perde informação.
+Talvez haja uma forma melhor de medir proximidade da solução.
 
 \subsection{Geração de Caminhos}
+Não é usada nenhuma heurística para auxiliar
+a geração de caminhos.
+Um simples filtro de caminhos que quebram a dica
+deve ajudar bastante.
 
 \section{Possíveis Melhorias de Funcionalidade}
 \subsection{Permitir para diferentes linhas e colunas}
+O código só funciona para puzzles quadrados,
+não deve ser muito difícil ajeitá-lo
+para aceitar puzzles com dimensões retangulares.
+
 \subsection{Generalizar para mais cores}
+Semelhante ao anterior, não deve ser muito difícil.
+
 \subsection{Permitir solução parcial}
+Isso é algo bem legal, pois permitiria
+resolver um puzzle parcialmente resolvido
+(talvez depois de uma série de iterações lógicas).
+Provavelmente daria um pouco mais de trabalho.
 
 \section{Análise final}
+Achei que os caminhos ficaram bem próximos,
+mas aumentando o número de iterações
+não ajudava em chegar mais próximo da resposta.
+Deu a impressão de que ficou preso em um mínimo local
+próximo à solução.
+
+Achei que \lang{} cobriu bem as necessidades desse trabalho,
+mas como é o meu primeiro projeto maior com essa linguagem,
+acabei demorando mais do que o esperado.
+
+Tive problemas em tirar as fotos das respostas,
+então não tenho certeza se todas estão certas.
+
+Eu acho que seria legal transformar esse trabalho
+em um paper ou algo assim,
+mas acho que não tenho muita disponibilidade de tempo para isso.
+Então deveria ser algo pequeno.
 
 \section{Bibliografia} \label{s:bib}
 
