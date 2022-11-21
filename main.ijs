@@ -115,7 +115,7 @@ NB. "Haskell type": Picked a = Keep a | New a
 NB. End "Data Type": Picked
 
 NB. check/update termination condition and run 'it'
-NB. inputs: (params) loop (boxed list from init)
+NB. inputs: ((params) loop) N (boxed list from init)
 loop =: 1 : 0
     NB. runs an iteration, updates feromone, f(bpath), bpath
     new =. {. , (2 3&{) (0&{@] , ({::~&0@[ > {::~&1@]) { [ ,: 1 2&{@]) (m it)@{::~&1
