@@ -29,8 +29,12 @@
 \usepackage{graphicx}
 \graphicspath{{../images/}}
 
+\newcommand{\apl}{\texttt{APL}}
 \newcommand{\lang}{\texttt{J}}
+\newcommand{\jver}{\texttt{J903}}
 \newcommand{\inlcode}{\mintinline[breaklines]{J}}
+
+\newcommand{\file}{\texttt}
 
 \title{Trabalho Computacional - Programação Não Linear\\
 Picross e Ant Colony}
@@ -228,7 +232,7 @@ minimizam/maximizam a \emph{função objetivo}.
 
 A linguagem escolhida para a implementação foi \lang{}:
 uma linguagem orientada a arrays,
-da mesma família que  \texttt{APL}.
+da mesma família que \apl{}.
 Não foi usada nenhuma biblioteca para construir o algoritmo,
 mas foi usada \inlcode{viewmat} para fazer as imagens
 apresentadas nesse relatório.
@@ -414,6 +418,165 @@ permite uma \inlcode{main} mais simples.
 
 \section{Resultados}
 
+Na seção \ref{s:bib},
+tem um link com instruções de instalação.
+A versão usada nesse trabalho foi a \jver{},
+mas não deve ter grandes problemas se a versão for diferente.
+
+Vamos seguir assumindo que já estamos em um sessão
+(\texttt{jconsole}, \texttt{jqt} e \texttt{jhs} são exemplos),
+e guardamos o caminho
+até o \file{main.ijs} na variável \inlcode{path}.
+Então, chamamos o verbo \inlcode{load}
+para carregar as funções que estão no arquivo \file{main.ijs}.
+Por exemplo:
+\begin{minted}{j}
+    NB. ']' é só para mostrar o valor da variável
+    ] path =: '~/path/to/main.ijs'
+~/path/to/main.ijs
+    load path
+    NB. Note que: load '~/path/to/main.ijs'
+    NB. também funciona
+\end{minted}
+
+\subsection{Como rodar}
+A função \inlcode{main} recebe
+uma lista encaixotada de \emph{parâmetros},
+vamos guardar em \inlcode{p}, e
+uma lista encaixotada de \emph{variáveis de loop},
+vamos guardar em \inlcode{v}.
+
+Os \emph{parâmetros} são, em ordem:
+\emph{taxa de evaporação} \(\rho\),
+\emph{função objetivo} \(f\) e
+\emph{número de formigas por iteração} \(ants\).
+O exemplo assume que \(\rho = 0.4\),
+\(f\) é está otimizando para o puzzle \ref{p:face} e
+\(ants = 100\).
+\begin{minted}{j}
+    face
+0 0 0 1 0
+0 1 0 0 1
+0 0 0 0 1
+0 1 0 0 1
+0 0 0 1 0
+    n2b face    NB. calcula as dicas a partir de uma solução
++-+---+-+---+-+
+|1|1 1|1|1 1|1|
++-+---+-+---+-+
+|0|1 1|0|1 1|3|
++-+---+-+---+-+
+    ] p =: (<0.4)`((n2b face)&f)`(<100)
++---+---------------------------+---+
+|0.4|+-+-----------------------+|100|
+|   ||&|+-------------------+-+||   |
+|   || ||+-+---------------+|f|||   |
+|   || |||0|+-+---+-+---+-+|| |||   |
+|   || ||| ||1|1 1|1|1 1|1||| |||   |
+|   || ||| |+-+---+-+---+-+|| |||   |
+|   || ||| ||0|1 1|0|1 1|3||| |||   |
+|   || ||| |+-+---+-+---+-+|| |||   |
+|   || ||+-+---------------+| |||   |
+|   || |+-------------------+-+||   |
+|   |+-+-----------------------+|   |
++---+---------------------------+---+
+    NB. Essa caixa do meio é a representação da função objetivo
+\end{minted}
+
+As \emph{váriavei de loop} são, em ordem:
+\emph{contador de iterações} \(n\)
+que conta quantas iterações ainda pode seguir,
+\emph{lista de feromônio} \(\tau\),
+\emph{imagem do caminho \emph{dummy}} e
+\emph{caminho \emph{dummy}},
+um caminho todo em branco para
+servir como um \emph{``placeholder''}.
+Elas podem ser criadas
+com uma função auxiliar \inlcode{init}.
+O exemplo assume que \(n = 200\) e
+que a \(\tau\) começa com \(1\) em cada aresta.
+\begin{minted}{j}
+    NB. não precisa ser a solução,
+    NB. basta uma matriz com o tamanho igual
+    ] fer =: 1 newfer face
+1 1 1 1 1
+1 1 1 1 1
+1 1 1 1 1
+1 1 1 1 1
+1 1 1 1 1
+
+1 1 1 1 1
+1 1 1 1 1
+1 1 1 1 1
+1 1 1 1 1
+1 1 1 1 1
+   ] v =: 200 (p init) fer
++---+---------+--+---------+
+|200|1 1 1 1 1|14|0 0 0 0 0|
+|   |1 1 1 1 1|  |0 0 0 0 0|
+|   |1 1 1 1 1|  |0 0 0 0 0|
+|   |1 1 1 1 1|  |0 0 0 0 0|
+|   |1 1 1 1 1|  |0 0 0 0 0|
+|   |         |  |         |
+|   |1 1 1 1 1|  |         |
+|   |1 1 1 1 1|  |         |
+|   |1 1 1 1 1|  |         |
+|   |1 1 1 1 1|  |         |
+|   |1 1 1 1 1|  |         |
++---+---------+--+---------+
+\end{minted}
+
+O algoritmo propriamente dito,
+está implementado em \inlcode{loop},
+mas a \inlcode{main} coleta mais informações e
+é mais fácil de usar.
+
+A função \inlcode{main} pode ser chamada com os argumentos
+\inlcode{p} pela esquerda e \inlcode{v} pela direita.
+Antes de chamá-la, pode-se alterar a semente inicial
+se achar interessante.
+\inlcode{main} retorna uma lista de caixas,
+a primeira caixa contém a semente inicial
+com o estado do gerador de números aleatórios
+antes de rodar o algoritmo,
+mas esse estado é gigantesco,
+então não vai ser mostrado no exemplo;
+a segunda o tempo de execução;
+a terceira é uma variável interna que indica se deve parar,
+já que ele retornou algo, deve ser sempre \(0\);
+a quarta são as \emph{variáveis de loop}:
+\(n\), \(\tau\), \(f(c^*)\), \(c^*\).
+\begin{minted}{j}
+    NB. Escolhendo uma semente (opcional)
+    wseed 16807
+
+    'rng time stop ret' =: p main v
+    time ; stop ; <ret
++-------+-+------------------------------------------------------------+
+|2.03215|0|+-+--------------------------------------------+-+---------+|
+|       | ||0| 1.32328 0.929616 0.620616   1.4589 0.859697|4|1 1 0 1 0||
+|       | || |0.784592  1.43173  1.20543  1.51852  1.61536| |1 1 1 1 1||
+|       | || | 1.36438  1.78557 0.427282  1.19983  1.08449| |1 1 0 0 0||
+|       | || |0.632997 0.864541 0.512813 0.708474  1.00561| |0 0 0 1 0||
+|       | || |0.453377 0.409504  1.34556 0.847346  1.18167| |0 1 1 1 0||
+|       | || |                                            | |         ||
+|       | || |0.676724  1.07038  1.37938 0.541097   1.1403| |         ||
+|       | || | 1.21541 0.568269 0.794566 0.481477 0.384644| |         ||
+|       | || |0.635621 0.214428  1.57272 0.800168 0.915508| |         ||
+|       | || |   1.367  1.13546  1.48719  1.29153 0.994391| |         ||
+|       | || | 1.54662   1.5905 0.654442  1.15265 0.818328| |         ||
+|       | |+-+--------------------------------------------+-+---------+|
++-------+-+------------------------------------------------------------+
+    NB. Se não quiser guardar a saída em variáveis pode fazer:
+    NB. }. p main v
+    NB. para jogar fora o 'rng', ou
+    NB. 1 3 { p main v
+    NB. para escolher quais resultados quer ver
+    NB. (nesse caso 'time' e 'ret')
+\end{minted}
+
+\subsection{Método}
+
 \section{Possíveis Melhorias de Performance}
 \subsection{Representação do Grafo}
 
@@ -430,14 +593,18 @@ permite uma \inlcode{main} mais simples.
 
 \section{Análise final}
 
-\section{Bibliografia}
+\section{Bibliografia} \label{s:bib}
 
 Sobre \lang{}:
 \begin{itemize}
     \item Página inicial: \par
         \url{https://wiki.jsoftware.com/wiki/Main_Page}
+    \item Instruções de instalação: \par
+        \url{https://wiki.jsoftware.com/wiki/System/Installation}
     \item Dicionário de primitivas: \par
         \url{https://wiki.jsoftware.com/wiki/NuVoc}
+    \item J-playground (uma sessão online): \par
+        \url{https://jsoftware.github.io/j-playground/bin/html/index.html}
 \end{itemize}
 
 Sobre \emph{Picross}:
