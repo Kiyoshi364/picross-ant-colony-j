@@ -12,6 +12,8 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 
+\usepackage{multirow}
+
 \usepackage{minted}
 
 \usepackage{hyperref}
@@ -577,25 +579,32 @@ a quarta são as \emph{variáveis de loop}:
 
 \subsection{Método}
 
-Para cada puzzle e configuração de parâmetros,
+Para cada puzzle e configuração de parâmetros escolhidos,
+vai setar uma seed, nesse caso \(16807\),
+(isso é para poder reproduzir com mais facilidade) e
 vão ser executados 5 vezes,
-assim terão duas tabelas,
-uma com todas as saídas e
-outra com as melhores.
-No final, vão aparecer 3 imagens:
-a solução, a diferênça e
-o melhor caminho encontrado em todas as execuções.
-A diferênça tem duas cores extras: vermelho e verde.
+assim a tabela irá mostrar
+os tempos e imagens de cada execução.
+Para cada tabela, vão aparecer 3 imagens:
+a solução, a diferença e
+um melhor caminho encontrado em todas as execuções.
+A diferença tem duas cores extras: vermelho e verde.
 Vermelho aponta um pixel colorido erroniamente,
 enquanto verde aponta um pixel que não foi pintado.
 
-Além dos 3 puzzles da figura \ref{pg:5x5},
-vai ter um puzzle gerado aleatóriamente
+O puzzle escolhido foi \ref{p:face}.
+Rodar várias vezes, salvar as imagens e montar a tabela
+são tarefas repetitivas e consomem um tempo considerável.
+Não tive tempo sobrando para automatizá-las,
+idealmente, teria tabelas de todos os puzzles.
+
+Os 3 puzzles da figura \ref{pg:others},
+forams gerados aleatóriamente
 para cada um dos seguintes tamanhos:
 \(10 \times 10\) (\ref{p:random10}),
 \(25 \times 25\) (\ref{p:random25}) e
-\(50 \times 50\) (\ref{p:random25}) .
-A ideia é ter uma noção de o quão bem
+\(50 \times 50\) (\ref{p:random25}).
+A ideia seria ter uma noção de o quão bem
 ele se comporta com puzzles maiores.
 
 \begin{figure}[h]
@@ -622,13 +631,69 @@ ele se comporta com puzzles maiores.
     \label{pg:others}
 \end{figure}
 
-O melhor caminho de cada execução vai estar
-na pasta \file{images/puzzle/params/},
-onde \file{puzzle} é o nome do puzzle,
-e \file{params} são os parâmetros escolhidos
+As imagens estão
+na pasta \file{images/face/params/},
+onde \file{params} são os parâmetros escolhidos
 para a execução.
+Entretanto tive problemas em tirar as fotos das respostas,
+então não tenho certeza se todas estão certas.
 
 \subsection{Tabelas}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|lc|cc|cc|cc|} \hline
+        && \multicolumn{6}{|c|}{\bfseries Evaporação} \\\hline
+        \multicolumn{2}{|c|}{\bfseries Iterações}
+            & \multicolumn{2}{|c|}{$\rho = 0.05$}
+            & \multicolumn{2}{|c|}{$\rho = 0.25$}
+            & \multicolumn{2}{|c|}{$\rho = 0.45$} \\\hline
+        \multicolumn{2}{|c|}{$ants = 2500$}
+            & \textbf{Tempo} & \textbf{Imagem}
+            & \textbf{Tempo} & \textbf{Imagem}
+            & \textbf{Tempo} & \textbf{Imagem} \\\hline
+        \multirow{5}{*}{100}
+            & 1 & 24.17 s & 4 & 24.01 s & 4 & 24.18 & 4 \\
+            & 2 & 24.13 s & 6 & 24.08 s & 6 & 24.27 & 4 \\
+            & 3 & 24.02 s & 6 & 23.90 s & 6 & 24.14 & 6 \\
+            & 4 & 24.07 s & 4 & 23.98 s & 6 & 24.18 & 6 \\
+            & 5 & 24.16 s & 4 & 23.90 s & 4 & 24.16 & 6 \\\hline
+        \multirow{5}{*}{200}
+            & 1 & 47.71 s & 4 & 47.63 s & 4 & 47.94 & 4 \\
+            & 2 & 47.69 s & 4 & 47.84 s & 4 & 47.89 & 4 \\
+            & 3 & 47.80 s & 4 & 47.53 s & 4 & 46.51 & 6 \\
+            & 4 & 47.85 s & 4 & 47.90 s & 4 & 47.79 & 4 \\
+            & 5 & 47.87 s & 4 & 47.99 s & 6 & 47.82 & 6 \\\hline
+        \multirow{5}{*}{400}
+            & 1 & 94.91 s & 4 & 95.11 s & 4 & 95.80 & 4 \\
+            & 2 & 94.79 s & 6 & 95.23 s & 6 & 95.71 & 6 \\
+            & 3 & 94.83 s & 4 & 95.30 s & 4 & 95.81 & 4 \\
+            & 4 & 95.07 s & 6 & 95.20 s & 4 & 96.00 & 4 \\
+            & 5 & 95.21 s & 4 & 95.69 s & 6 & 95.82 & 6 \\\hline
+    \end{tabular}
+    \caption{Execuções do Puzzle \ref{p:face}}
+    \label{te:face}
+\end{table}
+
+\begin{figure}
+    \centering
+    \begin{subfigure}{0.3\textwidth}
+        \centering
+        \includegraphics[width=0.9\linewidth]{face-border}
+        \caption{Solução}
+    \end{subfigure}
+    \begin{subfigure}{0.3\textwidth}
+        \centering
+        \includegraphics[width=0.9\linewidth]{face/evap005-it100/run1-diff-border}
+        \caption{Diferença}
+    \end{subfigure}
+    \begin{subfigure}{0.3\textwidth}
+        \centering
+        \includegraphics[width=0.9\linewidth]{face/evap005-it100/run1-border}
+        \caption{Melhor caminho}
+    \end{subfigure}
+    \caption{Melhor resultado}
+\end{figure}
 
 \section{Possíveis Melhorias de Performance}
 \subsection{Representação do Grafo}
