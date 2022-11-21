@@ -1,3 +1,42 @@
+NB. For Drawing
+require 'viewmat'
+
+NB. Begin: Drawing Utilities
+
+    NB. Show board
+    sb =: '.X'&$: : ({~)
+
+    NB. Color Pallets
+    defaultPallet  =: 255 ,: 0 0 0
+    borderPallet  =: 127 127 127 , defaultPallet
+    diffPallet    =: 255 , 255 0 0 , 0 255 0 ,: 0
+    diffBorPallet =: 127 127 127 , diffPallet
+
+    NB. Put a border
+    border =: _1&$: : ([ ,"1~ [ (,"1) [ ,~ ,)
+
+    NB. View board (in a window)
+    vb =: defaultPallet&$: : (viewmat)
+
+    NB. View border board (in a window)
+    vbb =: borderPallet viewmat border : [:
+
+    NB. View board diff (in a window)
+    NB. inputs: (answer) vdiff (other)
+    vdiff =: diffPallet vb +:@[ + ]
+
+    NB. View border board diff (in a window)
+    NB. inputs: (answer) vbdiff (other)
+    vbdiff =: diffBorPallet vb [: border +:@[ + ]
+
+NB. End: Drawing Utilities
+
+NB. Begin: Board Examples
+    face    =: 5 5 $ 0 0 0 1 0 , 0 1 0 0 1 , 0 0 0 0 1 , 0 1 0 0 1 , 0 0 0 1 0
+    heart   =: 5 5 $ 0 1 0 1 0 , 1 1 1 1 1 , 1 1 1 1 1 , 0 1 1 1 0 , 0 0 1 0 0
+    random5 =: 5 5 $ 1 1 0 1 1 , 1 0 1 0 0 , 0 1 0 1 0 , 0 1 0 1 0 , 1 0 0 0 0
+NB. End: Board Examples
+
 NB. Read and Write random seed
 rrand =: 9!:0
 wrand =: 9!:1
@@ -10,9 +49,6 @@ n2l =: [: ((0<#) {:: (,0) ; ]) [: (#~ 0&<) [: +/;._1 (0) , ]
 
 NB. Transform one board to two list of numbers
 n2b =: (,:&:(<@n2l"1) |:)~~
-
-NB. Show board
-sb =: '.X'&$: : ({~)
 
 NB. build random path
 NB. inputs: (ignored) rpath (feromone)
