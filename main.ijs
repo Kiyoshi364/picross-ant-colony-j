@@ -119,14 +119,14 @@ NB. End "Data Type": Picked
 NB. check/update termination condition and run 'it'
 NB. inputs: (params) loop (boxed list from init)
 loop =: 1 : 0
-NB. runs an iteration, updates feromone, f(bpath), bpath
-new =. {. , (2 3&{) (0&{@] , ({::~&0@[ > {::~&1@]) { [ ,: 1 2&{@]) (m it)@{::~&1
-NB. decrement timer
-dec =. ] (}.@[ ;~ 0 >. <:@]) {::~&0@]
-NB. checks if should terminate: (timer = 0) or (f(bpath) = 0)
-NB. returns 0 if should stop
-finish =. (<@] ;~ 0 *./@:< >@{~&0 2)@unP@]
-finish (dec@:new) Ap y
+    NB. runs an iteration, updates feromone, f(bpath), bpath
+    new =. {. , (2 3&{) (0&{@] , ({::~&0@[ > {::~&1@]) { [ ,: 1 2&{@]) (m it)@{::~&1
+    NB. decrement timer
+    dec =. ] (}.@[ ;~ 0 >. <:@]) {::~&0@]
+    NB. checks if should terminate: (timer = 0) or (f(bpath) = 0)
+    NB. returns 0 if should stop
+    finish =. (<@] ;~ 0 *./@:< >@{~&0 2)@unP@]
+    finish (dec@:new) Ap y
 )
 
 NB. This is a multi line comment
